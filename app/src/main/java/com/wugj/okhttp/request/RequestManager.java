@@ -317,16 +317,8 @@ public class RequestManager {
      */
     private <T> Call requestPostByAsyn(String actionUrl, HashMap<String, String> paramsMap, final ReqCallBack<T> callBack) {
         try {
-            StringBuilder tempParams = new StringBuilder();
-            int pos = 0;
-            for (String key : paramsMap.keySet()) {
-                if (pos > 0) {
-                    tempParams.append("&");
-                }
-                tempParams.append(String.format("%s=%s", key, URLEncoder.encode(paramsMap.get(key), "utf-8")));
-                pos++;
-            }
-            String params = tempParams.toString();
+            //处理参数
+            String params = JsonByMap.createJsonObject(paramsMap).toString();
             RequestBody body = RequestBody.create(MEDIA_TYPE_JSON, params);
             String requestUrl = String.format("%s/%s", BASE_URL, actionUrl);
             final Request request = addHeaders().url(requestUrl).post(body).build();
