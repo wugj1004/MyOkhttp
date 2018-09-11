@@ -1,0 +1,17 @@
+
+gradle/wrapper/
+build/
+bin/
+gen/
+.gradle/
+.idea/
+*.apk
+*.iml
+*.DS_Store
+*.swp
+*.swo
+gradlew.bat
+local.properties
+gradlew*
+*.pro
+*/release
