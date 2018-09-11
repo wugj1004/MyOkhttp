@@ -37,6 +37,17 @@
             </intent-filter>
         </receiver>
 
+        <!-- Android 7.0 照片、APK下载保存路径-->
+        <!--android:authorities="对应的包名.fileprovider"-->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.wugj.okhttp.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
