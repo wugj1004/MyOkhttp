@@ -1,10 +1,10 @@
 package com.wugj.okhttp.request;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
+import com.wugj.okhttp.json.JsonByMap;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -92,13 +92,14 @@ public class RequestManager {
         Map<String, Object> deviceMap = deviceInfo.getConstants();
 
         Request.Builder builder = new Request.Builder()
-                .addHeader("Connection", "keep-alive")
-                .addHeader("Accept", "application/json")
+                .addHeader("Connection", "Keep-Alive")
+                .addHeader("accept", "application/json")
                 .addHeader("imei", (String) deviceMap.get("uniqueId"))
-                .addHeader("appVersion", "2.0.1")
-                .addHeader("screenSize", "480*800")
-                .addHeader("deviceInfo", (String) deviceMap.get("brand")+(String) deviceMap.get("model"))
-                .addHeader("systemVersion", Build.VERSION.RELEASE);
+                .addHeader("platform", (String) deviceMap.get("systemName"))
+                .addHeader("appversion", "2.0.1")
+                .addHeader("screenSize", "360*604")
+                .addHeader("deviceInfo", (String) deviceMap.get("brand")+(String) deviceMap.get("model"));
+
         return builder;
     }
 
@@ -116,7 +117,7 @@ public class RequestManager {
                 return requestGetBySyn(actionUrl, paramsMap);
 
             case TYPE_POST_JSON:
-                return requestPostBySyn(actionUrl, paramsMap);
+                return requestPostBySynWithJson(actionUrl, paramsMap);
 
             case TYPE_POST_FORM:
                 return requestPostBySynWithForm(actionUrl, paramsMap);
@@ -132,7 +133,7 @@ public class RequestManager {
      * @param actionUrl  接口地址
      * @param paramsMap   请求参数
      */
-    private Response requestGetBySyn(String actionUrl, HashMap<String, String> paramsMap) {
+    private Response requestGetBySyn (String actionUrl, HashMap<String, String> paramsMap) {
         Response response = null;
         StringBuilder tempParams = new StringBuilder();
         try {
@@ -165,27 +166,16 @@ public class RequestManager {
     }
 
     /**
-     * okHttp post同步请求
+     * okHttp post-json同步请求
+     * json需要服务端配合设置accept：application/json
      * @param actionUrl  接口地址
      * @param paramsMap   请求参数
      */
-    private Response requestPostBySyn(String actionUrl, HashMap<String, String> paramsMap) {
+    private Response requestPostBySynWithJson(String actionUrl, HashMap<String, String> paramsMap) {
         Response response = null;
         try {
             //处理参数
-            StringBuilder tempParams = new StringBuilder();
-            int pos = 0;
-            for (String key : paramsMap.keySet()) {
-                if (pos > 0) {
-                    tempParams.append("&");
-                }
-                tempParams.append(String.format("%s=%s", key, URLEncoder.encode(paramsMap.get(key), "utf-8")));
-                pos++;
-            }
-
-            //生成参数
-            String params = tempParams.toString();
-
+            String params = JsonByMap.createJsonObject(paramsMap).toString();
             //补全请求地址
             String requestUrl = String.format("%s/%s", BASE_URL, actionUrl);
             //创建一个请求实体对象 RequestBody
@@ -208,7 +198,8 @@ public class RequestManager {
     }
 
     /**
-     * okHttp post同步请求表单提交
+     * okHttp post-form同步请求表单提交
+     * form需要服务端配合设置accept：application/form
      * @param actionUrl 接口地址
      * @param paramsMap 请求参数
      */

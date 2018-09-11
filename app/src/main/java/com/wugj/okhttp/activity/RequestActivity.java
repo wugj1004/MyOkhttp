@@ -14,7 +14,7 @@ import java.util.HashMap;
 import okhttp3.Response;
 
 /**
- * description:
+ * description:同步，异步网络请求
  * </br>
  * author: wugj
  * </br>
@@ -24,7 +24,7 @@ import okhttp3.Response;
  */
 public class RequestActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private String actionUrl = "/user/login";
+    private String actionUrl = "user/login";
     private static final String TAG = RequestActivity.class.getSimpleName();
     private RequestActivity activity;
 
@@ -71,7 +71,12 @@ public class RequestActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-
+    /**
+     * 接口调试不通，排查原因：1、请求头信息；2、请求体封装是否正确
+     * @param requestManager
+     * @param paramsMap
+     * @param requestType
+     */
     private void requestSyn(final RequestManager requestManager, final HashMap<String, String> paramsMap, final int requestType){
         new Thread(new Runnable(){
             @Override
@@ -84,7 +89,7 @@ public class RequestActivity extends AppCompatActivity implements View.OnClickLi
                         if (response.isSuccessful()) {
                             //获取返回数据 可以是String，bytes ,byteStream
                             try {
-                                Toast.makeText(activity, "返回成功，dayinbody信息"+response.body().string(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, "返回成功，body信息"+response.body().string(), Toast.LENGTH_SHORT).show();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -94,5 +99,7 @@ public class RequestActivity extends AppCompatActivity implements View.OnClickLi
             }
         }).start();
     }
+
+
 
 }
