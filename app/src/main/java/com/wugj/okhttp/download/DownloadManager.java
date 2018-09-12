@@ -23,14 +23,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * description: Okhttp3简单实现下载更新
- * </br>
- * autour: wugj
- * </br>
- * date: 2018/8/25 上午8:16
- * </br>
- * version:
+ * 普通下载
  */
+
 public class DownloadManager {
 
     private WeakReference<Activity> weakReference;
@@ -107,7 +102,7 @@ public class DownloadManager {
      * 获取下载文件地址
      * @return
      */
-    private Uri getFileUri(){
+    public Uri getFileUri(){
         Uri contentUri;
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -157,4 +152,5 @@ public class DownloadManager {
             callRequest.cancel();
         }
     }
+
 }
