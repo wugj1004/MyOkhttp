@@ -8,7 +8,6 @@ import android.widget.Toast;
 
 import com.wugj.okhttp.R;
 import com.wugj.okhttp.download.DownloadManager;
-import com.wugj.okhttp.download.NotificationUtil;
 import com.wugj.okhttp.download.OnDownloadListener;
 
 /**
@@ -49,15 +48,14 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void fileDownLoad(){
-        final NotificationUtil notifyUtil = notification();
         mDownloadManager.downloadFile(download_url, new OnDownloadListener() {
             @Override
             public void onDownloadSuccess() {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //下载完成安装
-                        notifyUtil.cancelById();
+                        //下载完成
+
                     }
                 });
             }
@@ -65,7 +63,7 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onDownloading(int progress) {
                 Log.e(Tag,"下载进度:"+progress);
-                notifyUtil.setDownloadProcess(progress);
+
             }
 
             @Override
@@ -73,17 +71,13 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        notifyUtil.cancelById();
+
                     }
                 });
             }
         });
     }
 
-    private NotificationUtil notification(){
-        NotificationUtil notifyUtil = new NotificationUtil(DownloadActivity.this);
-        return notifyUtil;
-    }
 
     private void showToast(String msg){
         Toast.makeText(DownloadActivity.this, msg, Toast.LENGTH_SHORT).show();
