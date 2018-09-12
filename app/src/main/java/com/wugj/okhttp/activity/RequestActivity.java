@@ -15,14 +15,9 @@ import java.util.HashMap;
 import okhttp3.Response;
 
 /**
- * description:同步，异步网络请求
- * </br>
- * author: wugj
- * </br>
- * date: 2018/9/10
- * </br>
- * version:
+ * 普通封装数据请求
  */
+
 public class RequestActivity extends AppCompatActivity implements View.OnClickListener{
 
     private String actionUrl = "user/login";

@@ -21,13 +21,7 @@ import com.wugj.okhttp.download.PointDownloadManager;
 import org.w3c.dom.Text;
 
 /**
- * description:
- * </br>
- * author: wugj
- * </br>
- * date: 2018/9/10
- * </br>
- * version:
+ * 文件下载
  */
 public class DownloadActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -50,7 +44,7 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
 
         findViewById(R.id.down1).setOnClickListener(this);
         findViewById(R.id.down2).setOnClickListener(this);
-        findViewById(R.id.cancel).setOnClickListener(this);
+        findViewById(R.id.cancel2).setOnClickListener(this);
         pro1 = findViewById(R.id.pro1);
         pro2 = findViewById(R.id.pro2);
         text2 = findViewById(R.id.text2);
@@ -65,7 +59,7 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
             case R.id.down2:
                 pointDownload();
                 break;
-            case R.id.cancel:
+            case R.id.cancel2:
                 pointDownloadManager.cancel(download_url);
                 break;
         }

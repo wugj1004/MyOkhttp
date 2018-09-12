@@ -26,7 +26,7 @@
         <!--文件上传-->
         <activity android:name=".activity.UploadActivity"/>
         <!--配合RxJava网络请求-->
-        <activity android:name=".activity.RxRequestActivity"/>
+        <activity android:name=".activity.HeiRequestActivity"/>
 
         <receiver
             android:name=".request.RNDeviceReceiver"

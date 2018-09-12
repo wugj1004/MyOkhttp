@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.wugj.okhttp.activity.DownloadActivity;
 import com.wugj.okhttp.activity.RequestActivity;
-import com.wugj.okhttp.activity.RxRequestActivity;
+import com.wugj.okhttp.activity.HeiRequestActivity;
 import com.wugj.okhttp.activity.UploadActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.setClass(activity, UploadActivity.class);
                 break;
             case R.id.bt4:
-                intent.setClass(activity, RxRequestActivity.class);
+                intent.setClass(activity, HeiRequestActivity.class);
                 break;
         }
         startActivity(intent);

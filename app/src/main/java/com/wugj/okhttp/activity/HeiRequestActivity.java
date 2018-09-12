@@ -6,15 +6,10 @@ import android.view.View;
 import com.wugj.okhttp.R;
 
 /**
- * description:
- * </br>
- * author: wugj
- * </br>
- * date: 2018/9/10
- * </br>
- * version:
+ * 高级封装网络请求：RxJava+OkHttp3+Retrofit
  */
-public class RxRequestActivity extends AppCompatActivity {
+
+public class HeiRequestActivity extends AppCompatActivity {
 
     @Override
     public void setContentView(View view) {

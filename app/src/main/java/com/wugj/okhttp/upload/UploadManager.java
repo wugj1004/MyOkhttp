@@ -4,11 +4,10 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
-import com.wugj.okhttp.request.ReqCallBack;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -38,7 +37,7 @@ public class UploadManager {
 
     private static final MediaType MEDIA_OBJECT_STREAM = MediaType.parse("application/octet-stream");//mdiatype 这个需要和服务端保持一致 你需要看下你们服务器设置的ContentType 是不是这个，他们设置的是哪个 我们要和他们保持一致
 
-    private static final String BASE_URL = "https://spaceone-app.haozu.com";//请求接口根地址
+    private static final String BASE_URL = "https://mob.haozu.com";//请求接口根地址
 
     /**
      * 初始化RequestManager
@@ -73,12 +72,12 @@ public class UploadManager {
 
     /**
      *上传文件
+     * @param <T>
      * @param actionUrl 接口地址
      * @param paramsMap 参数
      * @param callBack 回调
-     * @param <T>
      */
-    public <T> void upLoadFile(String actionUrl, HashMap<String, ? extends Object> paramsMap, final UploadCallBack<T> callBack) {
+    public <T> void upLoadFile(String actionUrl, Map<String, String> paramsMap, final UploadCallBack<String> callBack) {
         try {
             //补全请求地址
             String requestUrl = String.format("%s/%s", BASE_URL, actionUrl);
@@ -112,9 +111,8 @@ public class UploadManager {
                     if (response.isSuccessful()) {
                         String string = response.body().string();
                         Log.e(TAG, "response ----->" + string);
-                        successCallBack((T)string,callBack);
+                        successCallBack(string,callBack);
                     } else {
-                        callBack.onUploadFailed("上传失败");
                         failedCallBack("上传失败",callBack);
                     }
                 }
@@ -179,7 +177,7 @@ public class UploadManager {
             @Override
             public void run() {
                 if (callBack != null) {
-                    callBack.onUploadSuccess(result);
+                    callBack.onReqSuccess(result);
                 }
             }
         });
