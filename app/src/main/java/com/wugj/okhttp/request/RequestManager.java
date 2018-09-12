@@ -46,7 +46,6 @@ public class RequestManager {
     private static final String TAG = RequestManager.class.getSimpleName();
     private static final String BASE_URL = "https://spaceone-app.haozu.com";//请求接口根地址
 
-    private static Context ctx;
 
     /**
      * 初始化RequestManager
@@ -67,7 +66,6 @@ public class RequestManager {
      * @return
      */
     public static RequestManager getInstance(Context context) {
-        ctx = context;
         RequestManager inst = mInstance;
         //双重锁判定，防止多线程调用时发生错乱
         if (inst == null) {
