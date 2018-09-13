@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -37,7 +38,7 @@ public class UploadManager {
 
     private static final MediaType MEDIA_OBJECT_STREAM = MediaType.parse("application/octet-stream");//mdiatype 这个需要和服务端保持一致 你需要看下你们服务器设置的ContentType 是不是这个，他们设置的是哪个 我们要和他们保持一致
 
-    private static final String BASE_URL = "https://mob.haozu.com";//请求接口根地址
+    private static final String BASE_URL = "http://mob.haozu.com";//请求接口根地址
 
     /**
      * 初始化RequestManager
@@ -77,7 +78,7 @@ public class UploadManager {
      * @param paramsMap 参数
      * @param callBack 回调
      */
-    public <T> void upLoadFile(String actionUrl, Map<String, String> paramsMap, final UploadCallBack<String> callBack) {
+    public <T> void upLoadFile(String actionUrl, Map<String, Object> paramsMap, final UploadCallBack<String> callBack) {
         try {
             //补全请求地址
             String requestUrl = String.format("%s/%s", BASE_URL, actionUrl);
@@ -94,6 +95,7 @@ public class UploadManager {
                     builder.addFormDataPart(key, file.getName(), createRequestBody(MEDIA_OBJECT_STREAM, file, callBack));
                 }
             }
+
             //创建RequestBody
             RequestBody body = builder.build();
             //创建Request

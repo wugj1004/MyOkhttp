@@ -10,7 +10,7 @@
         android:id="@+id/up1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="普通文件上传" />
+        android:text="照片上传" />
 
 
     <ProgressBar
@@ -24,4 +24,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="0%" />
+
 </LinearLayout>
