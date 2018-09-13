@@ -22,14 +22,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wugj.okhttp.R;
+import com.wugj.okhttp.upload.FileUpload;
 import com.wugj.okhttp.upload.UploadCallBack;
 import com.wugj.okhttp.upload.UploadManager;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,17 +43,21 @@ import java.util.Map;
  */
 public class UploadActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ProgressBar pro1;
-    TextView tvPro1;
-    UploadManager uploadManager;
-    private String actionUrl = "upload/image/";
-    File outputImagepath;
+    ProgressBar pro1,pro2;
+    TextView tvPro1,tvPro2;
+
+
 
     public static final int TAKE_PHOTO = 1;//启动相机标识
-    public static final int SELECT_PHOTO = 2;//启动相册标识
     public static final int CREATE_DIR = 3;//启动相册标识
 
+    File uploadFile;
 
+    UploadManager uploadManager;
+    private String actionUrl = "upload/image/";
+
+
+    UploadEnum normalEnum = UploadEnum.OkhttpUpload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +68,9 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.up1).setOnClickListener(this);
         pro1 = findViewById(R.id.pro1);
         tvPro1 = findViewById(R.id.tvPro1);
+        findViewById(R.id.up2).setOnClickListener(this);
+        pro2 = findViewById(R.id.pro2);
+        tvPro2 = findViewById(R.id.tvPro2);
     }
 
 
@@ -65,9 +78,13 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.up1:
-                showDialog();
+                normalEnum = UploadEnum.OkhttpUpload;
+                break;
+            case R.id.up2:
+                normalEnum = UploadEnum.fileUpload;
                 break;
         }
+        showDialog();
     }
 
 
@@ -159,8 +176,8 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
 
                         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                         try {
-                            outputImagepath = File.createTempFile(timeStamp, ".jpg", storageDir);
-                            Log.e("UploadActivity", outputImagepath.getAbsolutePath());
+                            uploadFile = File.createTempFile(timeStamp, ".jpg", storageDir);
+                            Log.e("UploadActivity", uploadFile.getAbsolutePath());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -168,12 +185,12 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                             // 从文件中创建uri
-                            Uri uri = Uri.fromFile(outputImagepath);
+                            Uri uri = Uri.fromFile(uploadFile);
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                         } else {
                             //兼容android7.0 使用共享文件的形式
                             Uri uri = FileProvider.getUriForFile(UploadActivity.this,
-                                    "com.wugj.okhttp.fileProvider", outputImagepath);
+                                    "com.wugj.okhttp.fileProvider", uploadFile);
 
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                         }
@@ -196,8 +213,14 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
                     /**
                      * 这种方法是通过内存卡的路径进行读取图片，所以的到的图片是拍摄的原图
                      */
-                    Log.i("tag", "拍照图片路径>>>>" + outputImagepath);
-                    uploadFile();
+                    Log.i("tag", "拍照图片路径>>>>" + uploadFile);
+
+                    //照片上传
+                    if (normalEnum == UploadEnum.OkhttpUpload){
+                        uploadFile();
+                    }else if (normalEnum == UploadEnum.fileUpload){
+                        uploadFile1();
+                    }
                 }
                 break;
         }
@@ -212,7 +235,7 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         paramsMap.put("uuid", "865970034723757");
         paramsMap.put("devicename", "MHA-AL00");
         paramsMap.put("type", "1");
-        paramsMap.put("file", outputImagepath);
+        paramsMap.put("file", uploadFile);
 
 
         uploadManager.upLoadFile(actionUrl, paramsMap, new UploadCallBack<String>() {
@@ -236,4 +259,41 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
+
+
+    private void uploadFile1(){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String url = "http://mob.haozu.com/upload/image/";
+                List<NameValuePair> nameValuePairs = new ArrayList<>();
+                NameValuePair nameValuePair = new BasicNameValuePair("versionId", "4.3.1");
+                nameValuePairs.add(nameValuePair);
+                nameValuePair = new BasicNameValuePair("token", "YUhwMFpYTjBZbW8xJE1UVXpOamMwTmprMk55NHpNVEkzJGE3MzU5ODBmZDA5YmVkODAwMTIwYmE1NWVmNWM1ZDYx");
+                nameValuePairs.add(nameValuePair);
+                nameValuePair = new BasicNameValuePair("uuid", "865970034723757");
+                nameValuePairs.add(nameValuePair);
+                nameValuePair = new BasicNameValuePair("devicename", "MHA-AL00");
+                nameValuePairs.add(nameValuePair);
+                nameValuePair = new BasicNameValuePair("type", "1");
+                nameValuePairs.add(nameValuePair);
+
+                String fileName =uploadFile.getAbsoluteFile().getName();
+
+                Uri uri= Uri.fromFile(uploadFile);
+
+                FileUpload.uploadFiles(url, nameValuePairs, fileName, uri.toString());
+            }
+        }).start();
+
+
+
+
+    }
+
+
+    enum  UploadEnum{
+        OkhttpUpload,fileUpload
+    }
 }

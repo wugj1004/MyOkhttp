@@ -1,5 +1,7 @@
 package com.wugj.okhttp.upload;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -102,11 +104,13 @@ public final class FileUpload {
                 buffer.append(line);
             }
             inputStreamReader.close();
+            Log.e("fileUpload","上传成功");
             if(buffer.toString()!=null||buffer.toString().equals("")){
                 return buffer.toString();
             }else{
                 return null;
             }
+
         } catch (Exception e) {
             System.out.println("发送POST请求出现异常！" + e);
             e.printStackTrace();

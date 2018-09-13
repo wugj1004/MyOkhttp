@@ -38,7 +38,7 @@ public class UploadManager {
 
     private static final MediaType MEDIA_OBJECT_STREAM = MediaType.parse("application/octet-stream");//mdiatype 这个需要和服务端保持一致 你需要看下你们服务器设置的ContentType 是不是这个，他们设置的是哪个 我们要和他们保持一致
 
-    private static final String BASE_URL = "http://mob.haozu.com";//请求接口根地址
+    public static final String BASE_URL = "http://mob.haozu.com";//请求接口根地址
 
     /**
      * 初始化RequestManager
