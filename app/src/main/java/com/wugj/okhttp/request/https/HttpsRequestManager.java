@@ -108,37 +108,6 @@ public class HttpsRequestManager {
         return builder.build();
     }
 
-    /**
-     * 对外提供的获取支持自签名的okhttp客户端
-     * @param certificates 自签名证书的输入流
-     * @return 支持自签名的客户端
-     */
-    public OkHttpClient trustHttpClient(List<InputStream> certificates) {
-        X509TrustManager trustManager;
-        SSLSocketFactory sslSocketFactory;
-        try {
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            TrustManager[] trustManagers = new TrustManager[]{};
-            int index = 0;
-            for (InputStream certificate : certificates) {
-                trustManager = CerConfig.trustManagerForCertificates(certificate);
-                trustManagers[index] = trustManager;
-                index++;
-            }
-            //使用构建出的trustManger初始化SSLContext对象
-            sslContext.init(null, trustManagers, null);
-            //获得sslSocketFactory对象
-            sslSocketFactory = sslContext.getSocketFactory();
-        } catch (GeneralSecurityException e) {
-            throw new RuntimeException(e);
-        }
-
-
-        return new OkHttpClient.Builder().sslSocketFactory(sslSocketFactory).build();
-    }
-
-
-
     /*--------------------------------证书重点--------结束--------------------------------*/
 
 
