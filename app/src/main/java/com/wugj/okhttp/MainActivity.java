@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.wugj.okhttp.activity.DownloadActivity;
+import com.wugj.okhttp.activity.HttpsRequestActivity;
 import com.wugj.okhttp.activity.RequestActivity;
 import com.wugj.okhttp.activity.HeiRequestActivity;
 import com.wugj.okhttp.activity.UploadActivity;
@@ -29,6 +30,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.bt3).setOnClickListener(this);
         //配合RxJava网络请求
         findViewById(R.id.bt4).setOnClickListener(this);
+        //Https网络请求
+        findViewById(R.id.bt5).setOnClickListener(this);
+        //Retrofit
+        findViewById(R.id.bt6).setOnClickListener(this);
     }
 
     @Override
@@ -46,6 +51,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bt4:
                 intent.setClass(activity, HeiRequestActivity.class);
+                break;
+            case R.id.bt5:
+                intent.setClass(activity, HttpsRequestActivity.class);
+                break;
+            case R.id.bt6:
+
                 break;
         }
         startActivity(intent);

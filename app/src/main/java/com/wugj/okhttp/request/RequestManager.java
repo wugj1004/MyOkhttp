@@ -44,7 +44,7 @@ public class RequestManager {
     private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
     private static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("text/x-markdown; charset=utf-8");//mdiatype 这个需要和服务端保持一致
     private static final String TAG = RequestManager.class.getSimpleName();
-    private static final String BASE_URL = "https://spaceone-app.haozu.com";//请求接口根地址
+    private static final String BASE_URL = "http://spaceone-app.haozu.com";//请求接口根地址
 
 
     /**

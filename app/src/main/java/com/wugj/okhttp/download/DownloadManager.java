@@ -97,28 +97,6 @@ public class DownloadManager {
         });
     }
 
-
-    /**
-     * 获取下载文件地址
-     * @return
-     */
-    public Uri getFileUri(){
-        Uri contentUri;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        File apkFile = new File(weakReference.get().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),fileName);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){//7.0以上
-            contentUri = FileProvider.getUriForFile(weakReference.get(),
-                    BuildConfig.APPLICATION_ID + ".fileProvider",
-                    apkFile);
-
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        }else{//7.0以下
-            contentUri =Uri.fromFile(apkFile);
-        }
-
-        return contentUri;
-    }
     /**
      * @return
      * @throws IOException
@@ -142,6 +120,29 @@ public class DownloadManager {
     @NonNull
     private String getNameFromUrl(String url) {
         return url.substring(url.lastIndexOf("/") + 1);
+    }
+
+
+    /**
+     * 获取下载文件地址
+     * @return
+     */
+    public Uri getFileUri(){
+        Uri contentUri;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        File apkFile = new File(weakReference.get().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),fileName);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){//7.0以上
+            contentUri = FileProvider.getUriForFile(weakReference.get(),
+                    BuildConfig.APPLICATION_ID + ".fileProvider",
+                    apkFile);
+
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }else{//7.0以下
+            contentUri =Uri.fromFile(apkFile);
+        }
+
+        return contentUri;
     }
 
     /**
