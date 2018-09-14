@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
-import com.wugj.okhttp.json.JsonByMap;
-import com.wugj.okhttp.request.DeviceInfo;
 import com.wugj.okhttp.request.ReqCallBack;
 
 import java.io.ByteArrayInputStream;
@@ -15,7 +13,6 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
@@ -25,6 +22,7 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -47,7 +45,7 @@ public class HttpsRequestManager {
     private Handler okHttpHandler;//全局处理子线程和M主线程通信
 
     private static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
-    private static final String BASE_URL = "https://spaceone-app.haozu.com";//请求接口根地址
+    private static final String BASE_URL = "https://mob.haozu.com";//请求接口根地址
 
     private static final String TAG = HttpsRequestManager.class.getSimpleName();
 
@@ -149,41 +147,44 @@ public class HttpsRequestManager {
      * @return
      */
     private Request.Builder addHeaders() {
-        DeviceInfo deviceInfo = DeviceInfo.getInstance();
-        Map<String, Object> deviceMap = deviceInfo.getConstants();
-
         Request.Builder builder = new Request.Builder()
                 .addHeader("Connection", "Keep-Alive")
-                .addHeader("accept", "application/json")
-                .addHeader("imei", (String) deviceMap.get("uniqueId"))
-                .addHeader("platform", (String) deviceMap.get("systemName"))
-                .addHeader("appversion", "2.0.1")
-                .addHeader("screenSize", "360*604")
-                .addHeader("deviceInfo", (String) deviceMap.get("brand")+(String) deviceMap.get("model"));
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                .addHeader("User-Agent", "Dalvik/2.1.0 (Linux; U; Android 7.0; MHA-AL00 Build/HUAWEIMHA-AL00)")
+                .addHeader("devicename", "MHA-AL00")
+                .addHeader("model", "HUAWEI/MHA-AL00")
+                .addHeader("contentformat", "json2")
+                .addHeader("clientAgent", "HUAWEI/MHA-AL00#1080*1812#3.0#7.0")
+                .addHeader("versionId", "4.3.1")
+                .addHeader("uuid", "865970034723757");
 
         return builder;
     }
 
+
     /**
-     * okHttp post异步请求
+     * okHttp post异步请求表单提交
      * @param actionUrl 接口地址
      * @param paramsMap 请求参数
      * @param callBack 请求返回数据回调
      * @param <T> 数据泛型
      * @return
      */
-    public <T> Call requestPostByAsyn(String actionUrl, HashMap<String, String> paramsMap, final ReqCallBack<T> callBack) {
+    public <T> Call requestPostByAsynWithForm(String actionUrl, HashMap<String, String> paramsMap, final ReqCallBack<T> callBack) {
         try {
-            //处理参数
-            String params = JsonByMap.createJsonObject(paramsMap).toString();
-            RequestBody body = RequestBody.create(MEDIA_TYPE_JSON, params);
+            FormBody.Builder builder = new FormBody.Builder();
+            for (String key : paramsMap.keySet()) {
+                builder.add(key, paramsMap.get(key));
+            }
+            RequestBody formBody = builder.build();
             String requestUrl = String.format("%s/%s", BASE_URL, actionUrl);
-            final Request request = addHeaders().url(requestUrl).post(body).build();
+            final Request request = addHeaders().url(requestUrl).post(formBody).build();
             final Call call = mOkHttpClient.newCall(request);
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     failedCallBack("访问失败", callBack);
+                    Log.e(TAG, e.toString());
                 }
 
                 @Override
@@ -203,6 +204,7 @@ public class HttpsRequestManager {
         }
         return null;
     }
+
 
 
     /**

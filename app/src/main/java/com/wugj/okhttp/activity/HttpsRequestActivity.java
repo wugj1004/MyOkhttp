@@ -22,7 +22,7 @@ import java.util.HashMap;
  */
 public class HttpsRequestActivity extends AppCompatActivity implements View.OnClickListener{
 
-        private String actionUrl = "user/login";
+        private String actionUrl = "auth/nlogin";
         private static final String TAG = com.wugj.okhttp.activity.RequestActivity.class.getSimpleName();
         private com.wugj.okhttp.activity.RequestActivity activity;
 
@@ -38,11 +38,11 @@ public class HttpsRequestActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         HttpsRequestManager requestManager = HttpsRequestManager.getInstance(HttpsRequestActivity.this);
         HashMap<String, String> paramsMap = new HashMap<>();
-        paramsMap.put("user_name","2810962818@qq.com");//haozu1@haozu.com
-        paramsMap.put("password","123456abc");//1234qwer
+        paramsMap.put("username","hztestbj5");
+        paramsMap.put("password","72c698069b6e2c0518eeffd6798f61dd");
 
 
-        requestManager.requestPostByAsyn(actionUrl,paramsMap,new ReqCallBack<Object>(){
+        requestManager.requestPostByAsynWithForm(actionUrl,paramsMap,new ReqCallBack<Object>(){
             @Override
             public void onReqSuccess(Object result) {
                 Toast.makeText(HttpsRequestActivity.this, result.toString(), Toast.LENGTH_SHORT).show();
